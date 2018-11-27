@@ -1,7 +1,6 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "checkML.h"
-#include <iostream>
 #include "Game.h"
 #include "checkML.h"
 
@@ -17,10 +16,6 @@ int main(int argc, char* argv[]){
 }
 
 // PREGUNTAS
-/*
-- Vector velIni
-- Colisión de la bola
-*/
 
 // TAREAS PENDIENTES
 /*
@@ -28,4 +23,5 @@ int main(int argc, char* argv[]){
 - Destruir blocksMap correctamente al cargar un nuevo nivel (método limpiar)
 - Mejorar bucles anidados de blockAt()
 - Eliminar valores inmediatos
+- Revisar destructores
 */

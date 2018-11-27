@@ -9,13 +9,16 @@
 class Game;
 class Ball : public MovingObject{
 private:
+	Vector2D posIni;
+	Vector2D velIni;
 	Game* game;
 public:
 	Ball() {}
 	Ball(int x, int y, int w, int h, Vector2D v, Texture* t, Game* g) :
-		//pos(x, y), w(w), h(h), vel(vx, vy), texture(t), game(g) {}
 		MovingObject(x, y, w, h, v, t) {
 		game = g;
+		posIni = Vector2D(x, y);
+		velIni = v;
 	}
 	~Ball() { limpiar(); }
 	void limpiar();

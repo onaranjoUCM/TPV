@@ -23,6 +23,8 @@ void Ball::update() {
 	}
 
 	if (pos.getY() > WIN_HEIGHT + 100) {
+		pos = posIni;
+		setVel(velIni);
 		game->pierdeVida();
 	}
 }

@@ -8,6 +8,18 @@ void Paddle::limpiar() {
 	
 }
 
+void Paddle::expandW() {
+	w = w + (w / 2);
+}
+
+void Paddle::reduceW() {
+	w = w - (w / 2);
+}
+
+void Paddle::resetW() {
+	w = wIni;
+}
+
 void Paddle::update() {
 	if (pos.getX() > 25 - speed && pos.getX() < WIN_WIDTH - w - speed - 25) {
 		pos = Vector2D(pos.getX() + speed, pos.getY());
@@ -62,6 +74,7 @@ void Paddle::handleEvents(SDL_Event event) {
 			break;
 		}
 	}
+
 	if (event.type == SDL_KEYUP) {
 		switch (event.key.keysym.sym)
 		{
@@ -73,4 +86,12 @@ void Paddle::handleEvents(SDL_Event event) {
 			break;
 		}
 	}
+}
+
+bool Paddle::collides(const SDL_Rect* rect, Vector2D& collVector) {
+	if (SDL_HasIntersection(rect, &getRect())) {
+		collVector = ballCollisionVector(rect);
+		return true;
+	}
+	return false;
 }

@@ -5,7 +5,9 @@
 #include "Wall.h"
 #include "Paddle.h"
 #include "Ball.h"
+#include "Reward.h"
 #include "checkML.h"
+#include <fstream>
 
 Game::Game() {
 	// INITIALIZE SDL
@@ -16,9 +18,11 @@ Game::Game() {
 	if (window == nullptr || renderer == nullptr) throw "Error loading the SDL window or renderer";
 		
 	// TEXTURES
-	textures[0] = new Texture(renderer);
-	textures[0]->load(textureNames[0], 2, 3);
-	for (int i = 1; i < NUM_TEXTURES; i++) {
+	textures[blocksText] = new Texture(renderer);
+	textures[blocksText]->load(textureNames[blocksText], 2, 3);
+	textures[rewardText] = new Texture(renderer);
+	textures[rewardText]->load(textureNames[rewardText], 10, 8);
+	for (int i = 2; i < NUM_TEXTURES; i++) {
 		textures[i] = new Texture(renderer);
 		textures[i]->load(textureNames[i], 1, 1);
 	}
@@ -29,8 +33,9 @@ Game::Game() {
 	sideWallLeft = new Wall("left", 4, 0, 20, WIN_HEIGHT, textures[sideWallText]);
 	sideWallRight = new Wall("right", WIN_WIDTH - 24, 0, 20, WIN_HEIGHT, textures[sideWallText]);
 	upperWall = new Wall("top", 0, 0, WIN_WIDTH, 20, textures[upperWallText]);
-	paddle = new Paddle(WIN_WIDTH / 2 - textures[3]->getW() / 2, WIN_HEIGHT - (WIN_HEIGHT / 10), textures[3]->getW(), textures[3]->getH(), textures[paddleText]);
-	ball = new Ball(WIN_WIDTH / 2 - textures[4]->getW() / 10, WIN_HEIGHT - 100, textures[4]->getW() / 5, textures[4]->getH() / 5, ballSpeed, textures[ballText], this);
+	paddle = new Paddle(WIN_WIDTH / 2 - textures[paddleText]->getW() / 2, WIN_HEIGHT - (WIN_HEIGHT / 10), textures[paddleText]->getW(), textures[paddleText]->getH(), textures[paddleText]);
+	ball = new Ball(WIN_WIDTH / 2 - textures[ballText]->getW() / 10, WIN_HEIGHT - 100, textures[ballText]->getW() / 5, textures[ballText]->getH() / 5, ballSpeed, textures[ballText], this);
+	loadList();
 }
 
 Game::~Game() {
@@ -60,6 +65,7 @@ bool Game::collides(const SDL_Rect* rect, const Vector2D* vel, Vector2D& collVec
 	if (SDL_HasIntersection(rect, &blocksMap->getRect())) {
 		Block* block = blocksMap->collides(rect, vel, collVector);
 		if (block != nullptr) {
+			createReward(block->getX(), block->getY());
 			blocksMap->ballHitsBlock(block);
 			if (blocksMap->getNumBlocks() == 0) {
 				nextLevel();
@@ -74,13 +80,9 @@ bool Game::collides(const SDL_Rect* rect, const Vector2D* vel, Vector2D& collVec
 	if (upperWall->collides(rect, collVector)) { return true; }
 
 	// Paddle
-	if (SDL_HasIntersection(rect, &paddle->getRect())) {
-		collVector = paddle->ballCollisionVector(rect);
-		return true;
-	}
+	if (paddle->collides(rect, collVector)) { return true; }
 
 	return false;
-	
 }
 
 // Ejecución del juego
@@ -96,8 +98,9 @@ void Game::run() {
 void Game::update() {
 	int startTime = SDL_GetTicks();
 	if (win == false && gameOver == false) {
-		paddle->update();
-		ball->update();
+		for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
+			(*it)->update();
+		}
 	}
 
 	if (vidas == 0 && !gameOver) {
@@ -111,14 +114,11 @@ void Game::update() {
 }
 
 // Muestra todos los objetos en pantaalla
-void Game::render() const {
+void Game::render() {
 	SDL_RenderClear(renderer);
-	sideWallLeft->render();
-	sideWallRight->render();
-	upperWall->render();
-	paddle->render();
-	ball->render();
-	blocksMap->render();
+	for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
+		(*it)->render();
+	}
 	SDL_RenderPresent(renderer);
 }
 
@@ -128,6 +128,14 @@ void Game::handleEvents() {
 	while (SDL_PollEvent(&event) && !exit) {
 		if (event.type == SDL_QUIT) exit = true;
 		paddle->handleEvents(event);
+		if (event.type == SDL_KEYDOWN) {
+			switch (event.key.keysym.sym)
+			{
+			case SDLK_0:
+				nextLevel();
+				break;
+			}
+		}
 	}
 }
 
@@ -136,9 +144,14 @@ void Game::pierdeVida() {
 	cout << "Vidas: " << vidas << endl;
 }
 
+void Game::ganaVida() {
+	vidas++;
+	cout << "Vidas: " << vidas << endl;
+}
+
 void Game::nextLevel() {
 	if (nivelActual < 2) {
-		ball = new Ball(WIN_WIDTH / 2 - textures[4]->getW() / 10, WIN_HEIGHT - 100, textures[4]->getW() / 5, textures[4]->getH() / 5, Vector2D(0.05, -0.05), textures[4], this);
+		ball = new Ball(WIN_WIDTH / 2 - textures[4]->getW() / 10, WIN_HEIGHT - 100, textures[4]->getW() / 5, textures[4]->getH() / 5, ballSpeed, textures[4], this);
 		nivelActual++;
 		blocksMap->load(niveles[nivelActual]);
 	}
@@ -146,4 +159,58 @@ void Game::nextLevel() {
 		win = true;
 		cout << "Has ganado!";
 	}
+}
+
+void Game::loadList() {
+	objects.push_back(blocksMap);
+	objects.push_back(paddle);
+	objects.push_back(ball);
+	objects.push_back(sideWallLeft);
+	objects.push_back(sideWallRight);
+	objects.push_back(upperWall);
+}
+/*
+void Game::saveGame() {
+	int code = readCode();
+	...
+	ofstream file;
+	for (auto o in objects) {
+		o->saveToFile(file);
+	}
+	file.close();
+}
+
+void Game::loadNextLevel() {
+	for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
+		delete *it;
+		it = objects.erase(it);
+	}
+	firstReward = objects.end();
+}
+*/
+void Game::createReward(int x, int y) {
+	int random = rand() % 4;
+	Reward* r = new Reward(x, y, 50, 20, rewardTypes[random], Vector2D(0, 2), textures[rewardText], paddle, this);
+	objects.push_back(r);
+	/*
+	auto itFR = objects.end();
+	if (firstReward == objects.end()) {
+		firstReward = itFR;
+	}
+	*/
+}
+
+void Game::saveToFile() {
+	ifstream file;
+	file.open(saveFileName.c_str());
+}
+
+void Game::deleteReward(Reward* r) {
+	for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
+		if ((*it) == r) {
+			objects.erase(it);
+			break;
+		}
+	}
+	delete r;
 }

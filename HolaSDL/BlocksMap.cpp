@@ -116,6 +116,14 @@ Block* BlocksMap::collides(const SDL_Rect* ballRect, const Vector2D* ballVel, Ve
 
 // Devuelve el bloque que se encuentra en una posición determinada
 Block* BlocksMap::blockAt(const Vector2D& p) {
+	/*
+	int r = p.getY() / (getH() / rows) - 2;
+	int c = p.getX() / (getW() / cols) - 2;
+	cout << r << "-" << c << " ";
+	if (cells[r][c] != nullptr) {
+		return cells[r][c];
+	}*/
+	
 	// PENDIENTE DE MEJORA
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < cols; c++) {
@@ -130,6 +138,7 @@ Block* BlocksMap::blockAt(const Vector2D& p) {
 			}
 		}
 	}
+	
 	return nullptr;
 }
 
