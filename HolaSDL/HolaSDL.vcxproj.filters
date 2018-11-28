@@ -90,6 +90,9 @@
     <ClCompile Include="FileFormatError.cpp">
       <Filter>Archivos de código fuente\Exceptions</Filter>
     </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -139,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="FileFormatError.h">
       <Filter>Archivos de encabezado\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

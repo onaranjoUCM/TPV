@@ -2,15 +2,17 @@
 #include "SDL_image.h"
 #include "checkML.h"
 #include "Game.h"
+#include "Menu.h"
 #include "checkML.h"
 
 using namespace std;
 
 int main(int argc, char* argv[]){
 	//_CrtSetDbgFlag(CRTDBG ALLOC MEM DF | CRTDBG LEAK CHECK DF);
-
-	Game game = Game();
-	game.run();
+	Menu menu = Menu();
+	menu.run();
+	//Game game = Game();
+	//game.run();
 	//delete game;
 	return 0;
 }

@@ -190,7 +190,8 @@ void Game::loadNextLevel() {
 */
 void Game::createReward(int x, int y) {
 	int random = rand() % 4;
-	Reward* r = new Reward(x, y, 50, 20, rewardTypes[random], Vector2D(0, 2), textures[rewardText], paddle, this);
+	list<ArkanoidObject*>::iterator it = objects.end();
+	Reward* r = new Reward(x, y, 50, 20, rewardTypes[random], Vector2D(0, 2), textures[rewardText], paddle, this, it);
 	objects.push_back(r);
 	/*
 	auto itFR = objects.end();
@@ -198,6 +199,12 @@ void Game::createReward(int x, int y) {
 		firstReward = itFR;
 	}
 	*/
+}
+
+void Game::killObject(list<ArkanoidObject*>::iterator it) {
+	//if (it = firstReward) firstRewardH;
+	//delete *it;
+	//objects.erase(it);
 }
 
 void Game::saveToFile() {

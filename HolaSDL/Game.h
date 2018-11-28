@@ -1,6 +1,5 @@
 #include "SDL_image.h"
 #include "Texture.h"
-#include "Texture.h"
 #include "BlocksMap.h"
 #include "Wall.h"
 #include "Paddle.h"
@@ -65,4 +64,5 @@ public:
 	void saveToFile();
 	void ganaVida();
 	void deleteReward(Reward* r);
+	void killObject(list<ArkanoidObject*>::iterator it);
 };
