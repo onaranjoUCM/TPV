@@ -19,7 +19,6 @@ public:
 
 	void update();
 	void handleEvents();
-
 	bool collides(const SDL_Rect* rect, Vector2D& collVector);
 };
 

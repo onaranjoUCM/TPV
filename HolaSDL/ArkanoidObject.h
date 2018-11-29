@@ -18,7 +18,7 @@ public:
 	~ArkanoidObject() { limpiar(); }
 	void limpiar();
 	void loadFromFile();
-	void saveToFile();
+	void saveToFile(string filename);
 	void render();
 	void renderFrame(int row, int col);
 

@@ -17,6 +17,20 @@ Menu::Menu() {
 	titleRect.h = 200;
 	titleText = new Texture(renderer);
 	titleText->load("..\\images\\title.png", 1, 1);
+
+	playButtonRect.x = 350;
+	playButtonRect.y = 400;
+	playButtonRect.w = 100;
+	playButtonRect.h = 50;
+	playButtonText = new Texture(renderer);
+	playButtonText->load("..\\images\\bricks.png", 2, 3);
+
+	loadButtonRect.x = 350;
+	loadButtonRect.y = 500;
+	loadButtonRect.w = 100;
+	loadButtonRect.h = 50;
+	loadButtonText = new Texture(renderer);
+	loadButtonText->load("..\\images\\bricks.png", 2, 3);
 }
 
 Menu::~Menu() {
@@ -41,6 +55,8 @@ void Menu::update() {
 void Menu::render() {
 	SDL_RenderClear(renderer);
 	titleText->render(titleRect, SDL_FLIP_NONE);
+	playButtonText->renderFrame(playButtonRect, 0, 2);
+	loadButtonText->renderFrame(loadButtonRect, 0, 0);
 	SDL_RenderPresent(renderer);
 }
 
@@ -49,11 +65,34 @@ void Menu::handleEvents() {
 	SDL_Event event;
 	while (SDL_PollEvent(&event) && !exit) {
 		if (event.type == SDL_QUIT) exit = true;
+
 		if (event.type == SDL_KEYDOWN) {
 			Game game = Game();
 			game.run();
 			exit = true;
 		}
+
+		if (event.button.button == SDL_BUTTON_LEFT)
+		{
+			int x = event.button.x;
+			int y = event.button.y;
+
+			if ((x > 350) && (x < 450) && (y > 400) && (y < 450))
+			{
+				Game game = Game();
+				game.run();
+				exit = true;
+			}
+
+			if ((x > 350) && (x < 450) && (y > 500) && (y < 550))
+			{
+				string loadCode;
+				cin >> loadCode;
+				cout << "Introducido el código: " << loadCode;
+				// Cargar nivel delde el archivo loadCode
+			}
+		}
+
 	}
 }
 

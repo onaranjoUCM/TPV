@@ -7,7 +7,7 @@ void ArkanoidObject::loadFromFile() {
 
 }
 
-void ArkanoidObject::saveToFile() {
+void ArkanoidObject::saveToFile(string filename) {
 
 }
 

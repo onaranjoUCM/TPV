@@ -131,8 +131,15 @@ void Game::handleEvents() {
 		if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.sym)
 			{
-			case SDLK_0:
-				nextLevel();
+			case SDLK_s:
+				exit = true;
+				cout << "Escribe el nombre del fichero donde guardar la partida:" << endl;
+				string filename;
+				cin >> filename;
+				filename = "..\\savedGames\\" + filename + ".txt";
+				for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
+					(*it)->saveToFile(filename);
+				}
 				break;
 			}
 		}

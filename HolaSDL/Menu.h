@@ -12,6 +12,10 @@ private:
 
 	SDL_Rect titleRect;
 	Texture* titleText;
+	SDL_Rect playButtonRect;
+	Texture* playButtonText;
+	SDL_Rect loadButtonRect;
+	Texture* loadButtonText;
 	bool exit = false;
 public:
 	Menu();
