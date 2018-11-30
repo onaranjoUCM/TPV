@@ -12,10 +12,7 @@ void MovingObject::saveToFile(ofstream& outfile) {
 	outfile << "M ";
 	outfile << vel.getX() << " ";
 	outfile << vel.getY() << " ";
-	outfile << pos.getX() << " ";
-	outfile << pos.getY() << " ";
-	outfile << w << " ";
-	outfile << h << endl;
+	ArkanoidObject::saveToFile(outfile);
 }
 
 Vector2D MovingObject::getVel() { return vel; }
