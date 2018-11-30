@@ -16,7 +16,7 @@ public:
 	~MovingObject() { }
 
 	void loadFromFile();
-	void saveToFile(string filename);
+	void saveToFile(ofstream& outfile);
 
 	Vector2D getVel();
 	void setVel(Vector2D newVel);

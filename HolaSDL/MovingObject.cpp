@@ -8,15 +8,14 @@ void MovingObject::loadFromFile() {
 
 }
 
-void MovingObject::saveToFile(string filename) {
-	ofstream outfile(filename);
+void MovingObject::saveToFile(ofstream& outfile) {
+	outfile << "M ";
 	outfile << vel.getX() << " ";
 	outfile << vel.getY() << " ";
 	outfile << pos.getX() << " ";
 	outfile << pos.getY() << " ";
 	outfile << w << " ";
 	outfile << h << endl;
-	outfile.close();
 }
 
 Vector2D MovingObject::getVel() { return vel; }

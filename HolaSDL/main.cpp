@@ -24,6 +24,5 @@ int main(int argc, char* argv[]){
 - Llevarse más colisiones de Game.collides() a <Objeto>.collides()
 - Destruir blocksMap correctamente al cargar un nuevo nivel (método limpiar)
 - Mejorar bucles anidados de blockAt()
-- Eliminar valores inmediatos
 - Revisar destructores
 */

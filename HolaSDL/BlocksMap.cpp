@@ -1,4 +1,5 @@
 #include "BlocksMap.h"
+#include "Game.h"
 #include <fstream>
 #include "checkML.h"
 
@@ -52,6 +53,21 @@ void BlocksMap::load(const string& filename) {
 				}
 			}
 		}
+	}
+}
+
+
+bool BlocksMap::checkCollision(const SDL_Rect* rect, const Vector2D* vel, Vector2D& collVector, Game* game) {
+	if (SDL_HasIntersection(rect, &getRect())) {
+		Block* block = collides(rect, vel, collVector);
+		if (block != nullptr) {
+			game->createReward(block->getX(), block->getY());
+			ballHitsBlock(block);
+			if (getNumBlocks() == 0) {
+				game->nextLevel();
+			}
+		}
+		return true;
 	}
 }
 

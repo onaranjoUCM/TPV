@@ -1,5 +1,6 @@
 #include "ArkanoidObject.h"
 #include "checkML.h"
+#include <fstream>
 
 using namespace std;
 
@@ -7,8 +8,12 @@ void ArkanoidObject::loadFromFile() {
 
 }
 
-void ArkanoidObject::saveToFile(string filename) {
-
+void ArkanoidObject::saveToFile(ofstream& outfile) {
+	outfile <<  "A ";
+	outfile << pos.getX() << " ";
+	outfile << pos.getY() << " ";
+	outfile << w << " ";
+	outfile << h << endl;
 }
 
 void ArkanoidObject::limpiar() {

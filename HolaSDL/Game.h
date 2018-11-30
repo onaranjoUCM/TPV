@@ -61,8 +61,8 @@ public:
 	void nextLevel();
 	void loadList();
 	void createReward(int x, int y);
-	void saveToFile();
 	void ganaVida();
 	void deleteReward(Reward* r);
 	void killObject(list<ArkanoidObject*>::iterator it);
+	void saveGame();
 };
