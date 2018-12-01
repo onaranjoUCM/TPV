@@ -56,3 +56,4 @@ void Block::setColor(int c) {
 // Getters
 int Block::getR() { return row; }
 int Block::getC() { return col; }
+int Block::getColor() { return color; }

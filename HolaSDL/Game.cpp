@@ -8,6 +8,7 @@
 #include "Reward.h"
 #include "checkML.h"
 #include <fstream>
+#include <time.h> 
 
 Game::Game() {
 	// INITIALIZE SDL
@@ -36,6 +37,63 @@ Game::Game() {
 	paddle = new Paddle(WIN_WIDTH / 2 - textures[paddleText]->getW() / 2, WIN_HEIGHT - (WIN_HEIGHT / 10), textures[paddleText]->getW(), textures[paddleText]->getH(), textures[paddleText]);
 	ball = new Ball(WIN_WIDTH / 2 - textures[ballText]->getW() / 10, WIN_HEIGHT - 100, textures[ballText]->getW() / 5, textures[ballText]->getH() / 5, ballSpeed, textures[ballText], this);
 	loadList();
+}
+
+Game::Game(string filename) {
+	// INITIALIZE SDL
+	SDL_Init(SDL_INIT_EVERYTHING);
+	window = SDL_CreateWindow("Arkanoid", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+		WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	if (window == nullptr || renderer == nullptr) throw "Error loading the SDL window or renderer";
+
+	// TEXTURES
+	textures[blocksText] = new Texture(renderer);
+	textures[blocksText]->load(textureNames[blocksText], 2, 3);
+	textures[rewardText] = new Texture(renderer);
+	textures[rewardText]->load(textureNames[rewardText], 10, 8);
+	for (int i = 2; i < NUM_TEXTURES; i++) {
+		textures[i] = new Texture(renderer);
+		textures[i]->load(textureNames[i], 1, 1);
+	}
+
+	// GAME OBJECTS
+	ifstream file;
+	if (file.fail()) {
+		throw "Error loading blocks map from " + filename;
+	}
+	else {
+		file.open(filename);
+		file >> vidas;
+		file >> nivelActual;
+		int x, y, w, h, vx, vy;
+		file >> x >> y >> w >> h;
+		blocksMap = new BlocksMap(w, h, textures[blocksText]);
+		blocksMap->load(niveles[nivelActual]);
+		/*
+		int color;
+		for (int r = 0; r < blocksMap->getRows(); r++) {
+			for (int c = 0; c < blocksMap->getCols(); c++) {
+				file >> color;
+				if (color == 0 && blocksMap->getCells()[r][c] != nullptr) {
+					blocksMap->ballHitsBlock(blocksMap->getCells()[r][c]);
+				}
+			}
+		}
+		*/
+		file >> vx >> vy >> x >> y >> w >> h;
+		paddle = new Paddle(x, y, w, h, textures[paddleText]);
+		file >> vx >> vy >> x >> y >> w >> h;
+		ball = new Ball(x, y, w, h, Vector2D(vx, vy), textures[ballText], this);
+		file >> x >> y >> w >> h;
+		sideWallLeft = new Wall("left", x, y, w, h, textures[sideWallText]);
+		file >> x >> y >> w >> h;
+		sideWallRight = new Wall("right", x, y, w, h, textures[sideWallText]);
+		file >> x >> y >> w >> h;
+		upperWall = new Wall("top", x, y, w, h, textures[upperWallText]);
+		loadList();
+		file.close();
+	}
 }
 
 Game::~Game() {
@@ -163,22 +221,15 @@ void Game::saveGame() {
 	cin >> filename;
 	filename = "..\\savedGames\\" + filename + ".txt";
 
-	ofstream outfile(filename, ofstream::app);
+	ofstream outfile(filename, ofstream::trunc);
+	outfile << vidas << " ";
+	outfile << nivelActual << endl;
 	for (auto object : objects)
 	{
 		object->saveToFile(outfile);
 	}
 	outfile.close();
 }
-/*
-	int code = readCode();
-	...
-	ofstream file;
-	for (auto o in objects) {
-		o->saveToFile(file);
-	}
-	file.close();
-*/
 /*
 void Game::loadNextLevel() {
 	for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
@@ -189,6 +240,7 @@ void Game::loadNextLevel() {
 }
 */
 void Game::createReward(int x, int y) {
+	srand(time(NULL));
 	int random = rand() % 4;
 	list<ArkanoidObject*>::iterator it = objects.end();
 	Reward* r = new Reward(x, y, 50, 20, rewardTypes[random], Vector2D(0, 2), textures[rewardText], paddle, this, it);

@@ -9,7 +9,6 @@ void MovingObject::loadFromFile() {
 }
 
 void MovingObject::saveToFile(ofstream& outfile) {
-	outfile << "M ";
 	outfile << vel.getX() << " ";
 	outfile << vel.getY() << " ";
 	ArkanoidObject::saveToFile(outfile);

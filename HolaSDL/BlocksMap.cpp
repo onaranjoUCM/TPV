@@ -53,9 +53,24 @@ void BlocksMap::load(const string& filename) {
 				}
 			}
 		}
+		file.close();
 	}
 }
 
+void BlocksMap::saveToFile(ofstream& outfile) {
+	ArkanoidObject::saveToFile(outfile);
+	/*
+	for (int r = 0; r < rows; r++) {
+		for (int c = 0; c < cols; c++) {
+			if (cells[r][c] != nullptr) {
+				outfile << cells[r][c]->getColor() << " ";
+			} else {
+				outfile << 0 << " ";
+			}
+		}
+	}
+	*/
+}
 
 bool BlocksMap::checkCollision(const SDL_Rect* rect, const Vector2D* vel, Vector2D& collVector, Game* game) {
 	if (SDL_HasIntersection(rect, &getRect())) {
@@ -168,6 +183,18 @@ void BlocksMap::ballHitsBlock(Block* block) {
 // Devuelve el número de bloques que quedan
 int BlocksMap::getNumBlocks() {
 	return numBlocks;
+}
+
+int BlocksMap::getRows() {
+	return rows;
+}
+
+int BlocksMap::getCols() {
+	return cols;
+}
+
+Block*** BlocksMap::getCells() {
+	return cells;
 }
 
 void BlocksMap::limpiar() {

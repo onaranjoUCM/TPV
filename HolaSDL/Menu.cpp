@@ -84,6 +84,13 @@ void Menu::handleEvents() {
 				exit = true;
 			}
 
+			if ((x > 350) && (x < 450) && (y > 450) && (y < 500))
+			{
+				Game game = Game("..\\savedGames\\prueba.txt");
+				game.run();
+				exit = true;
+			}
+
 			if ((x > 350) && (x < 450) && (y > 500) && (y < 550))
 			{
 				string loadCode;

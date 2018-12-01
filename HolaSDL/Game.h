@@ -48,9 +48,9 @@ private:
 	int rewardTypes[4] = {0, 1, 3, 4};
 	Vector2D ballSpeed = Vector2D(1, -1);
 	string niveles[3] = { "..\\maps\\level01.ark", "..\\maps\\level02.ark", "..\\maps\\level03.ark" };
-	string saveFileName = "..\\saveGame.txt";
 public:
 	Game();
+	Game(string filename);
 	~Game();
 	void run();
 	bool collides(const SDL_Rect* rect, const Vector2D* vel, Vector2D& collVector);
