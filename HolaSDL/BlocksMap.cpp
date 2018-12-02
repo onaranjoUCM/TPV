@@ -2,6 +2,7 @@
 #include "Game.h"
 #include <fstream>
 #include "checkML.h"
+#include <time.h>
 
 using namespace std;
 
@@ -39,7 +40,7 @@ void BlocksMap::load(const string& filename) {
 					cells[r][c] = nullptr;
 				}
 				else {
-					int margenX = (800 - w) / 2;
+					int margenX = (WIN_WIDTH - w) / 2;
 					int posX = c * (w / cols) + margenX;
 					int posY = r * (h / rows) + 50;
 					cells[r][c] = new Block(posX, posY, w / cols, h / rows, r, c, color, texture);
@@ -76,7 +77,10 @@ bool BlocksMap::checkCollision(const SDL_Rect* rect, const Vector2D* vel, Vector
 	if (SDL_HasIntersection(rect, &getRect())) {
 		Block* block = collides(rect, vel, collVector);
 		if (block != nullptr) {
-			game->createReward(block->getX(), block->getY());
+			srand(time(NULL));
+			if (rand() % 5 == 0) {
+				game->createReward(block->getX(), block->getY());
+			}
 			ballHitsBlock(block);
 			if (getNumBlocks() == 0) {
 				game->nextLevel();
@@ -153,8 +157,8 @@ Block* BlocksMap::blockAt(const Vector2D& p) {
 	cout << r << "-" << c << " ";
 	if (cells[r][c] != nullptr) {
 		return cells[r][c];
-	}*/
-	
+	}
+	*/
 	// PENDIENTE DE MEJORA
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < cols; c++) {

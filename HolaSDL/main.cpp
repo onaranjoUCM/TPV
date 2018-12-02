@@ -18,11 +18,10 @@ int main(int argc, char* argv[]){
 }
 
 // PREGUNTAS
+// Por que niveles.lenght() es 19?
 
 // TAREAS PENDIENTES
 /*
-- Llevarse más colisiones de Game.collides() a <Objeto>.collides()
-- Destruir blocksMap correctamente al cargar un nuevo nivel (método limpiar)
 - Mejorar bucles anidados de blockAt()
 - Revisar destructores
 */

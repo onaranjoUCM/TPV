@@ -193,10 +193,13 @@ void Game::ganaVida() {
 }
 
 void Game::nextLevel() {
-	cout << niveles->length();
 	if (nivelActual < 2) {
-		ball = new Ball(WIN_WIDTH / 2 - textures[ballText]->getW() / 10, WIN_HEIGHT - 100, textures[ballText]->getW() / 5, textures[ballText]->getH() / 5, ballSpeed, textures[ballText], this);
+		//ball = new Ball(WIN_WIDTH / 2 - textures[ballText]->getW() / 10, WIN_HEIGHT - 100, textures[ballText]->getW() / 5, textures[ballText]->getH() / 5, ballSpeed, textures[ballText], this);
+		delete blocksMap;
+		ball->setPos(Vector2D(WIN_WIDTH / 2 - textures[ballText]->getW() / 10, WIN_HEIGHT - 100));
+		ball->setVel(ballSpeed);
 		nivelActual++;
+		blocksMap = new BlocksMap(WIN_WIDTH - 200, WIN_HEIGHT / 2, textures[blocksText]);
 		blocksMap->load(niveles[nivelActual]);
 	}
 	else {
