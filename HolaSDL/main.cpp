@@ -22,6 +22,10 @@ int main(int argc, char* argv[]){
 
 // TAREAS PENDIENTES
 /*
+- Error al sobreescribir archivo de guardado
+- Guardar los rewards en el fichero
+- Mejorar menú
+- Implementar excepciones
 - Mejorar bucles anidados de blockAt()
 - Revisar destructores
 */

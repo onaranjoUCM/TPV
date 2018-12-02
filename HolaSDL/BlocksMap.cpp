@@ -60,7 +60,7 @@ void BlocksMap::load(const string& filename) {
 
 void BlocksMap::saveToFile(ofstream& outfile) {
 	ArkanoidObject::saveToFile(outfile);
-	/*
+
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < cols; c++) {
 			if (cells[r][c] != nullptr) {
@@ -70,7 +70,6 @@ void BlocksMap::saveToFile(ofstream& outfile) {
 			}
 		}
 	}
-	*/
 }
 
 bool BlocksMap::checkCollision(const SDL_Rect* rect, const Vector2D* vel, Vector2D& collVector, Game* game) {

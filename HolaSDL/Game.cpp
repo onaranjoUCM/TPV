@@ -63,24 +63,28 @@ Game::Game(string filename) {
 		throw "Error loading blocks map from " + filename;
 	}
 	else {
+		int x, y, w, h, vx, vy, color;
 		file.open(filename);
+
 		file >> vidas;
 		file >> nivelActual;
-		int x, y, w, h, vx, vy;
+
 		file >> x >> y >> w >> h;
 		blocksMap = new BlocksMap(w, h, textures[blocksText]);
 		blocksMap->load(niveles[nivelActual]);
-		/*
-		int color;
 		for (int r = 0; r < blocksMap->getRows(); r++) {
 			for (int c = 0; c < blocksMap->getCols(); c++) {
 				file >> color;
-				if (color == 0 && blocksMap->getCells()[r][c] != nullptr) {
-					blocksMap->ballHitsBlock(blocksMap->getCells()[r][c]);
+				Block* block = blocksMap->getCells()[r][c];
+				if (block != nullptr) {
+					block->setColor(color);
+					if (color == 0) {
+						blocksMap->ballHitsBlock(block);
+					}
 				}
 			}
 		}
-		*/
+
 		file >> vx >> vy >> x >> y >> w >> h;
 		paddle = new Paddle(x, y, w, h, textures[paddleText]);
 		file >> vx >> vy >> x >> y >> w >> h;
@@ -265,9 +269,9 @@ void Game::killObject(list<ArkanoidObject*>::iterator it) {
 void Game::deleteReward(Reward* r) {
 	for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
 		if ((*it) == r) {
+			delete r;
 			objects.erase(it);
 			break;
 		}
 	}
-	delete r;
 }
