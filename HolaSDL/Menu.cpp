@@ -18,15 +18,25 @@ Menu::Menu() {
 	titleText = new Texture(renderer);
 	titleText->load("..\\images\\title.png", 1, 1);
 
+	// end button
+	endButtonRect.x = 350;
+	endButtonRect.y = 525; // de 300 a 325 y de 300 a 500
+	endButtonRect.w = 100;
+	endButtonRect.h = 50;
+	endButtonText = new Texture(renderer);
+	endButtonText->load("..\\images\\bricks.png", 2, 3);
+
+	// play button
 	playButtonRect.x = 350;
-	playButtonRect.y = 400;
+	playButtonRect.y = 425; // de 400 a 425
 	playButtonRect.w = 100;
 	playButtonRect.h = 50;
 	playButtonText = new Texture(renderer);
 	playButtonText->load("..\\images\\bricks.png", 2, 3);
 
+	// load button
 	loadButtonRect.x = 350;
-	loadButtonRect.y = 500;
+	loadButtonRect.y = 325; // de 500 a 525 y de 500 a 300
 	loadButtonRect.w = 100;
 	loadButtonRect.h = 50;
 	loadButtonText = new Texture(renderer);
@@ -34,7 +44,13 @@ Menu::Menu() {
 }
 
 Menu::~Menu() {
-
+	// destruye los punteros
+	window = nullptr;
+	renderer = nullptr;
+	playButtonText = nullptr;
+	endButtonText = nullptr;
+	loadButtonText = nullptr;
+	titleText = nullptr;
 }
 
 // Ejecución del juego
@@ -46,17 +62,16 @@ void Menu::run() {
 	}
 }
 
-// Métodos que ocurren en caada frame
-void Menu::update() {
+// Métodos que ocurren en cada frame
+void Menu::update() {} //NOTA = PREGUNTAR SI BORRAR METODO
 
-}
-
-// Muestra todos los objetos en pantaalla
+// Muestra todos los objetos en pantalla
 void Menu::render() {
 	SDL_RenderClear(renderer);
 	titleText->render(titleRect, SDL_FLIP_NONE);
-	playButtonText->renderFrame(playButtonRect, 0, 2);
-	loadButtonText->renderFrame(loadButtonRect, 0, 0);
+	playButtonText->renderFrame(playButtonRect, 0, 2); //ROJO = JUGAR
+	loadButtonText->renderFrame(loadButtonRect, 0, 0); //AZUL = CARGAR
+	endButtonText->renderFrame(endButtonRect, 0, 1); //VERDE = SALIR
 	SDL_RenderPresent(renderer);
 }
 
@@ -77,33 +92,25 @@ void Menu::handleEvents() {
 			int x = event.button.x;
 			int y = event.button.y;
 
-			if ((x > 350) && (x < 450) && (y > 400) && (y < 450))
+			if ((x > 350) && (x < 450) && (y > 400) && (y < 450)) // play button
 			{
 				Game game = Game();
 				game.run();
 				exit = true;
 			}
 
-			if ((x > 350) && (x < 450) && (y > 450) && (y < 500))
-			{
-				cout << "Introduce el codigo del fichero de guardado: ";
-				string filename;
-				cin >> filename;
-				filename = "..\\savedGames\\" + filename + ".txt";
-				Game game = Game(filename);
-				game.run();
-				exit = true;
-			}
-
-			if ((x > 350) && (x < 450) && (y > 500) && (y < 550))
+			if ((x > 350) && (x < 450) && (y > 300) && (y < 350))
 			{
 				string loadCode;
 				cin >> loadCode;
 				cout << "Introducido el código: " << loadCode;
 				// Cargar nivel delde el archivo loadCode
 			}
+			if ((x > 350) && (x < 450) && (y > 500) && (y < 550))
+			{
+				cout << "Juego terminado.";
+				exit = true;
+			}
 		}
-
 	}
 }
-
