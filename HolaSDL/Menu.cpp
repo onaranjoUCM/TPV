@@ -10,7 +10,7 @@ Menu::Menu() {
 		MENU_WIDTH, MENU_HEIGHT, SDL_WINDOW_SHOWN);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	if (window == nullptr || renderer == nullptr) throw "Error loading the SDL window or renderer";
-	
+
 	titleRect.x = 100;
 	titleRect.y = 100;
 	titleRect.w = 600;
