@@ -65,4 +65,6 @@ public:
 	void deleteReward(Reward* r);
 	void killObject(list<ArkanoidObject*>::iterator it);
 	void saveGame();
+	string getNivelActual();
+	Texture** getTextures();
 };

@@ -1,11 +1,16 @@
 #include "ArkanoidObject.h"
+#include "Game.h"
 #include "checkML.h"
 #include <fstream>
 
 using namespace std;
 
-void ArkanoidObject::loadFromFile() {
-
+void ArkanoidObject::loadFromFile(ifstream& file, Game* game) {
+	int x, y, width, height;
+	file >> x >> y >> width >> height;
+	pos = Vector2D(x, y);
+	w = width;
+	h = height;
 }
 
 void ArkanoidObject::saveToFile(ofstream& outfile) {

@@ -86,7 +86,7 @@ void Menu::handleEvents() {
 
 			if ((x > 350) && (x < 450) && (y > 450) && (y < 500))
 			{
-				cout << "Introduce el código del fichero de guardado: ";
+				cout << "Introduce el codigo del fichero de guardado: ";
 				string filename;
 				cin >> filename;
 				filename = "..\\savedGames\\" + filename + ".txt";

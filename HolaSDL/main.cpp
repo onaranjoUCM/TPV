@@ -22,6 +22,7 @@ int main(int argc, char* argv[]){
 
 // TAREAS PENDIENTES
 /*
+- Arreglar parche de blocksMaps.loadFromFile()
 - Error al sobreescribir archivo de guardado
 - Guardar los rewards en el fichero
 - Mejorar menú

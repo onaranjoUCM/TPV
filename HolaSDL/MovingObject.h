@@ -4,6 +4,7 @@
 #include "ArkanoidObject.h"
 #include "Vector2D.h"
 
+class Game;
 class MovingObject : public ArkanoidObject {
 protected:
 	Vector2D vel;
@@ -15,7 +16,7 @@ public:
 	}
 	~MovingObject() { }
 
-	void loadFromFile();
+	void loadFromFile(ifstream& file, Game* game);
 	void saveToFile(ofstream& outfile);
 
 	Vector2D getVel();

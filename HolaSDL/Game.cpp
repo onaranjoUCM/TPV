@@ -68,7 +68,20 @@ Game::Game(string filename) {
 
 		file >> vidas;
 		file >> nivelActual;
+		/*
+		blocksMap = new BlocksMap();
+		paddle = new Paddle();
+		ball = new Ball();
+		sideWallLeft = new Wall();
+		sideWallRight = new Wall();
+		upperWall = new Wall();
+		loadList();
 
+		for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
+			(*it)->loadFromFile(file, this);
+		}
+		*/
+		
 		file >> x >> y >> w >> h;
 		blocksMap = new BlocksMap(w, h, textures[blocksText]);
 		blocksMap->load(niveles[nivelActual]);
@@ -96,6 +109,7 @@ Game::Game(string filename) {
 		file >> x >> y >> w >> h;
 		upperWall = new Wall("top", x, y, w, h, textures[upperWallText]);
 		loadList();
+		
 		file.close();
 	}
 }
@@ -274,4 +288,12 @@ void Game::deleteReward(Reward* r) {
 			break;
 		}
 	}
+}
+
+string Game::getNivelActual() {
+	return niveles[nivelActual];
+}
+
+Texture** Game::getTextures() {
+	return textures;
 }

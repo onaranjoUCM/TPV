@@ -28,6 +28,7 @@ public:
 
 	void render();
 	void load(const string& filename);
+	void loadFromFile(ifstream& file, Game* game);
 	void saveToFile(ofstream& outfile);
 	void limpiar();
 	Block* collides(const SDL_Rect* ballRect, const Vector2D* ballVel, Vector2D& collVector);

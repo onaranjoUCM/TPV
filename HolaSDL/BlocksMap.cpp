@@ -58,6 +58,26 @@ void BlocksMap::load(const string& filename) {
 	}
 }
 
+void BlocksMap::loadFromFile(ifstream& file, Game* game) {
+	ArkanoidObject::loadFromFile(file, game);
+	
+	load(game->getNivelActual());
+	int color;
+	for (int r = 0; r < rows; r++) {
+		for (int c = 0; c < cols; c++) {
+			file >> color;
+			Block* block = cells[r][c];
+			if (block != nullptr) {
+				block->setColor(color);
+				if (color == 0) {
+					ballHitsBlock(block);
+				}
+			}
+		}
+	}
+	this->texture = game->getTextures()[0];
+}
+
 void BlocksMap::saveToFile(ofstream& outfile) {
 	ArkanoidObject::saveToFile(outfile);
 
