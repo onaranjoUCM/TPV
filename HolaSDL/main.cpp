@@ -11,9 +11,6 @@ int main(int argc, char* argv[]){
 	//_CrtSetDbgFlag(CRTDBG ALLOC MEM DF | CRTDBG LEAK CHECK DF);
 	Menu menu = Menu();
 	menu.run();
-	//Game game = Game();
-	//game.run();
-	//delete game;
 	return 0;
 }
 
@@ -29,4 +26,5 @@ int main(int argc, char* argv[]){
 - Implementar excepciones
 - Mejorar bucles anidados de blockAt()
 - Revisar destructores
+- Retocar velocidad paddle
 */

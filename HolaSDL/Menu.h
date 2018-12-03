@@ -16,6 +16,8 @@ private:
 	Texture* playButtonText;
 	SDL_Rect loadButtonRect;
 	Texture* loadButtonText;
+	SDL_Rect endButtonRect;
+	Texture* endButtonText;
 	bool exit = false;
 public:
 	Menu();

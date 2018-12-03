@@ -89,7 +89,9 @@ void BlocksMap::saveToFile(ofstream& outfile) {
 				outfile << 0 << " ";
 			}
 		}
+		outfile << endl;
 	}
+	outfile << endl;
 }
 
 bool BlocksMap::checkCollision(const SDL_Rect* rect, const Vector2D* vel, Vector2D& collVector, Game* game) {

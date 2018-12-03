@@ -155,9 +155,8 @@ void Game::run() {
 	}
 }
 
-// Métodos que ocurren en caada frame
+// Métodos que ocurren en cada frame
 void Game::update() {
-	int startTime = SDL_GetTicks();
 	if (win == false && gameOver == false) {
 		for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
 			(*it)->update();
@@ -168,6 +167,8 @@ void Game::update() {
 		cout << "Has perdido!" << endl;
 		gameOver = true;
 	}
+
+	int startTime = SDL_GetTicks();
 	int frameTime = SDL_GetTicks() - startTime;
 	if (frameTime < FRAME_RATE) {
 		SDL_Delay(FRAME_RATE - frameTime);
@@ -283,7 +284,7 @@ void Game::killObject(list<ArkanoidObject*>::iterator it) {
 void Game::deleteReward(Reward* r) {
 	for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
 		if ((*it) == r) {
-			delete r;
+			delete &r;
 			objects.erase(it);
 			break;
 		}

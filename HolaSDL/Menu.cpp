@@ -18,17 +18,10 @@ Menu::Menu() {
 	titleText = new Texture(renderer);
 	titleText->load("..\\images\\title.png", 1, 1);
 
-	// end button
-	endButtonRect.x = 350;
-	endButtonRect.y = 525; // de 300 a 325 y de 300 a 500
-	endButtonRect.w = 100;
-	endButtonRect.h = 50;
-	endButtonText = new Texture(renderer);
-	endButtonText->load("..\\images\\bricks.png", 2, 3);
 
 	// play button
 	playButtonRect.x = 350;
-	playButtonRect.y = 425; // de 400 a 425
+	playButtonRect.y = 325;
 	playButtonRect.w = 100;
 	playButtonRect.h = 50;
 	playButtonText = new Texture(renderer);
@@ -36,11 +29,19 @@ Menu::Menu() {
 
 	// load button
 	loadButtonRect.x = 350;
-	loadButtonRect.y = 325; // de 500 a 525 y de 500 a 300
+	loadButtonRect.y = 425;
 	loadButtonRect.w = 100;
 	loadButtonRect.h = 50;
 	loadButtonText = new Texture(renderer);
 	loadButtonText->load("..\\images\\bricks.png", 2, 3);
+
+	// end button
+	endButtonRect.x = 350;
+	endButtonRect.y = 525;
+	endButtonRect.w = 100;
+	endButtonRect.h = 50;
+	endButtonText = new Texture(renderer);
+	endButtonText->load("..\\images\\bricks.png", 2, 3);
 }
 
 Menu::~Menu() {
@@ -92,21 +93,25 @@ void Menu::handleEvents() {
 			int x = event.button.x;
 			int y = event.button.y;
 
-			if ((x > 350) && (x < 450) && (y > 400) && (y < 450)) // play button
+			if ((x > 350) && (x < 450) && (y > 325) && (y < 375)) // play button
 			{
 				Game game = Game();
 				game.run();
 				exit = true;
 			}
 
-			if ((x > 350) && (x < 450) && (y > 300) && (y < 350))
+			if ((x > 350) && (x < 450) && (y > 425) && (y < 475)) // load button
 			{
 				string loadCode;
+				cout << "Introduzca el codigo del fichero de guardado: " << loadCode;
 				cin >> loadCode;
-				cout << "Introducido el código: " << loadCode;
-				// Cargar nivel delde el archivo loadCode
+				loadCode = "..\\savedGames\\" + loadCode + ".txt";
+				Game game = Game(loadCode);
+				game.run();
+				exit = true;
 			}
-			if ((x > 350) && (x < 450) && (y > 500) && (y < 550))
+
+			if ((x > 350) && (x < 450) && (y > 525) && (y < 575)) // exit button
 			{
 				cout << "Juego terminado.";
 				exit = true;
