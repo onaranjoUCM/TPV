@@ -28,6 +28,7 @@ class Block : public ArkanoidObject {
 		void setColor(int c);
 		int getR();
 		int getC();
+		int getColor();
 };
 
 #endif

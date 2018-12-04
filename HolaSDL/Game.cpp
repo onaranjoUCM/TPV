@@ -8,6 +8,7 @@
 #include "Reward.h"
 #include "checkML.h"
 #include <fstream>
+#include <time.h> 
 
 Game::Game() {
 	// INITIALIZE SDL
@@ -28,7 +29,7 @@ Game::Game() {
 	}
 
 	// GAME OBJECTS
-	blocksMap = new BlocksMap(600, 300, textures[blocksText]);
+	blocksMap = new BlocksMap(WIN_WIDTH - 200, WIN_HEIGHT / 2, textures[blocksText]);
 	blocksMap->load(niveles[nivelActual]);
 	sideWallLeft = new Wall("left", 4, 0, 20, WIN_HEIGHT, textures[sideWallText]);
 	sideWallRight = new Wall("right", WIN_WIDTH - 24, 0, 20, WIN_HEIGHT, textures[sideWallText]);
@@ -36,6 +37,81 @@ Game::Game() {
 	paddle = new Paddle(WIN_WIDTH / 2 - textures[paddleText]->getW() / 2, WIN_HEIGHT - (WIN_HEIGHT / 10), textures[paddleText]->getW(), textures[paddleText]->getH(), textures[paddleText]);
 	ball = new Ball(WIN_WIDTH / 2 - textures[ballText]->getW() / 10, WIN_HEIGHT - 100, textures[ballText]->getW() / 5, textures[ballText]->getH() / 5, ballSpeed, textures[ballText], this);
 	loadList();
+}
+
+Game::Game(string filename) {
+	// INITIALIZE SDL
+	SDL_Init(SDL_INIT_EVERYTHING);
+	window = SDL_CreateWindow("Arkanoid", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+		WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	if (window == nullptr || renderer == nullptr) throw "Error loading the SDL window or renderer";
+
+	// TEXTURES
+	textures[blocksText] = new Texture(renderer);
+	textures[blocksText]->load(textureNames[blocksText], 2, 3);
+	textures[rewardText] = new Texture(renderer);
+	textures[rewardText]->load(textureNames[rewardText], 10, 8);
+	for (int i = 2; i < NUM_TEXTURES; i++) {
+		textures[i] = new Texture(renderer);
+		textures[i]->load(textureNames[i], 1, 1);
+	}
+
+	// GAME OBJECTS
+	ifstream file;
+	if (file.fail()) {
+		throw "Error loading blocks map from " + filename;
+	}
+	else {
+		int x, y, w, h, vx, vy, color;
+		file.open(filename);
+
+		file >> vidas;
+		file >> nivelActual;
+		/*
+		blocksMap = new BlocksMap();
+		paddle = new Paddle();
+		ball = new Ball();
+		sideWallLeft = new Wall();
+		sideWallRight = new Wall();
+		upperWall = new Wall();
+		loadList();
+
+		for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
+			(*it)->loadFromFile(file, this);
+		}
+		*/
+		
+		file >> x >> y >> w >> h;
+		blocksMap = new BlocksMap(w, h, textures[blocksText]);
+		blocksMap->load(niveles[nivelActual]);
+		for (int r = 0; r < blocksMap->getRows(); r++) {
+			for (int c = 0; c < blocksMap->getCols(); c++) {
+				file >> color;
+				Block* block = blocksMap->getCells()[r][c];
+				if (block != nullptr) {
+					block->setColor(color);
+					if (color == 0) {
+						blocksMap->ballHitsBlock(block);
+					}
+				}
+			}
+		}
+
+		file >> vx >> vy >> x >> y >> w >> h;
+		paddle = new Paddle(x, y, w, h, textures[paddleText]);
+		file >> vx >> vy >> x >> y >> w >> h;
+		ball = new Ball(x, y, w, h, Vector2D(vx, vy), textures[ballText], this);
+		file >> x >> y >> w >> h;
+		sideWallLeft = new Wall("left", x, y, w, h, textures[sideWallText]);
+		file >> x >> y >> w >> h;
+		sideWallRight = new Wall("right", x, y, w, h, textures[sideWallText]);
+		file >> x >> y >> w >> h;
+		upperWall = new Wall("top", x, y, w, h, textures[upperWallText]);
+		loadList();
+		
+		file.close();
+	}
 }
 
 Game::~Game() {
@@ -61,25 +137,10 @@ Game::~Game() {
 
 // Comprueba si el objeto pasado por parámetro colisiona con otro objeto del juego
 bool Game::collides(const SDL_Rect* rect, const Vector2D* vel, Vector2D& collVector) {
-	// BlocksMap
-	if (SDL_HasIntersection(rect, &blocksMap->getRect())) {
-		Block* block = blocksMap->collides(rect, vel, collVector);
-		if (block != nullptr) {
-			createReward(block->getX(), block->getY());
-			blocksMap->ballHitsBlock(block);
-			if (blocksMap->getNumBlocks() == 0) {
-				nextLevel();
-			}
-		}
-		return true;
-	}
-
-	// Walls
+	if (blocksMap->checkCollision(rect, vel, collVector, this)) { return true; }
 	if (sideWallLeft->collides(rect, collVector)) { return true; }
 	if (sideWallRight->collides(rect, collVector)) { return true; }
 	if (upperWall->collides(rect, collVector)) { return true; }
-
-	// Paddle
 	if (paddle->collides(rect, collVector)) { return true; }
 
 	return false;
@@ -94,9 +155,8 @@ void Game::run() {
 	}
 }
 
-// Métodos que ocurren en caada frame
+// Métodos que ocurren en cada frame
 void Game::update() {
-	int startTime = SDL_GetTicks();
 	if (win == false && gameOver == false) {
 		for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
 			(*it)->update();
@@ -107,13 +167,15 @@ void Game::update() {
 		cout << "Has perdido!" << endl;
 		gameOver = true;
 	}
+
+	int startTime = SDL_GetTicks();
 	int frameTime = SDL_GetTicks() - startTime;
 	if (frameTime < FRAME_RATE) {
 		SDL_Delay(FRAME_RATE - frameTime);
 	}
 }
 
-// Muestra todos los objetos en pantaalla
+// Muestra todos los objetos en pantalla
 void Game::render() {
 	SDL_RenderClear(renderer);
 	for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
@@ -132,14 +194,7 @@ void Game::handleEvents() {
 			switch (event.key.keysym.sym)
 			{
 			case SDLK_s:
-				exit = true;
-				cout << "Escribe el nombre del fichero donde guardar la partida:" << endl;
-				string filename;
-				cin >> filename;
-				filename = "..\\savedGames\\" + filename + ".txt";
-				for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
-					(*it)->saveToFile(filename);
-				}
+				saveGame();
 				break;
 			}
 		}
@@ -158,8 +213,12 @@ void Game::ganaVida() {
 
 void Game::nextLevel() {
 	if (nivelActual < 2) {
-		ball = new Ball(WIN_WIDTH / 2 - textures[4]->getW() / 10, WIN_HEIGHT - 100, textures[4]->getW() / 5, textures[4]->getH() / 5, ballSpeed, textures[4], this);
+		//ball = new Ball(WIN_WIDTH / 2 - textures[ballText]->getW() / 10, WIN_HEIGHT - 100, textures[ballText]->getW() / 5, textures[ballText]->getH() / 5, ballSpeed, textures[ballText], this);
+		delete blocksMap;
+		ball->setPos(Vector2D(WIN_WIDTH / 2 - textures[ballText]->getW() / 10, WIN_HEIGHT - 100));
+		ball->setVel(ballSpeed);
 		nivelActual++;
+		blocksMap = new BlocksMap(WIN_WIDTH - 200, WIN_HEIGHT / 2, textures[blocksText]);
 		blocksMap->load(niveles[nivelActual]);
 	}
 	else {
@@ -176,17 +235,24 @@ void Game::loadList() {
 	objects.push_back(sideWallRight);
 	objects.push_back(upperWall);
 }
-/*
-void Game::saveGame() {
-	int code = readCode();
-	...
-	ofstream file;
-	for (auto o in objects) {
-		o->saveToFile(file);
-	}
-	file.close();
-}
 
+void Game::saveGame() {
+	exit = true;
+	cout << "Escribe el nombre del fichero donde guardar la partida:" << endl;
+	string filename;
+	cin >> filename;
+	filename = "..\\savedGames\\" + filename + ".txt";
+
+	ofstream outfile(filename, ofstream::trunc);
+	outfile << vidas << " ";
+	outfile << nivelActual << endl;
+	for (auto object : objects)
+	{
+		object->saveToFile(outfile);
+	}
+	outfile.close();
+}
+/*
 void Game::loadNextLevel() {
 	for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
 		delete *it;
@@ -196,6 +262,7 @@ void Game::loadNextLevel() {
 }
 */
 void Game::createReward(int x, int y) {
+	srand(time(NULL));
 	int random = rand() % 4;
 	list<ArkanoidObject*>::iterator it = objects.end();
 	Reward* r = new Reward(x, y, 50, 20, rewardTypes[random], Vector2D(0, 2), textures[rewardText], paddle, this, it);
@@ -214,17 +281,20 @@ void Game::killObject(list<ArkanoidObject*>::iterator it) {
 	//objects.erase(it);
 }
 
-void Game::saveToFile() {
-	ifstream file;
-	file.open(saveFileName.c_str());
-}
-
 void Game::deleteReward(Reward* r) {
 	for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
 		if ((*it) == r) {
+			delete &r;
 			objects.erase(it);
 			break;
 		}
 	}
-	delete r;
+}
+
+string Game::getNivelActual() {
+	return niveles[nivelActual];
+}
+
+Texture** Game::getTextures() {
+	return textures;
 }

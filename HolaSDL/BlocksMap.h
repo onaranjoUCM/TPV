@@ -5,6 +5,7 @@
 #include "ArkanoidObject.h"
 #include "checkML.h"
 
+class Game;
 class BlocksMap : public ArkanoidObject {
 private:
 	int rows = 0;
@@ -27,11 +28,17 @@ public:
 
 	void render();
 	void load(const string& filename);
+	void loadFromFile(ifstream& file, Game* game);
+	void saveToFile(ofstream& outfile);
 	void limpiar();
 	Block* collides(const SDL_Rect* ballRect, const Vector2D* ballVel, Vector2D& collVector);
 	Block* blockAt(const Vector2D& p);
 	void ballHitsBlock(Block* block);
+	bool checkCollision(const SDL_Rect* rect, const Vector2D* vel, Vector2D& collVector, Game* game);
 	int getNumBlocks();
+	int getRows();
+	int getCols();
+	Block*** getCells();
 };
 
 #endif

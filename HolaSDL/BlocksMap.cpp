@@ -1,6 +1,8 @@
 #include "BlocksMap.h"
+#include "Game.h"
 #include <fstream>
 #include "checkML.h"
+#include <time.h>
 
 using namespace std;
 
@@ -38,7 +40,7 @@ void BlocksMap::load(const string& filename) {
 					cells[r][c] = nullptr;
 				}
 				else {
-					int margenX = (800 - w) / 2;
+					int margenX = (WIN_WIDTH - w) / 2;
 					int posX = c * (w / cols) + margenX;
 					int posY = r * (h / rows) + 50;
 					cells[r][c] = new Block(posX, posY, w / cols, h / rows, r, c, color, texture);
@@ -52,6 +54,60 @@ void BlocksMap::load(const string& filename) {
 				}
 			}
 		}
+		file.close();
+	}
+}
+
+void BlocksMap::loadFromFile(ifstream& file, Game* game) {
+	ArkanoidObject::loadFromFile(file, game);
+	
+	load(game->getNivelActual());
+	int color;
+	for (int r = 0; r < rows; r++) {
+		for (int c = 0; c < cols; c++) {
+			file >> color;
+			Block* block = cells[r][c];
+			if (block != nullptr) {
+				block->setColor(color);
+				if (color == 0) {
+					ballHitsBlock(block);
+				}
+			}
+		}
+	}
+	this->texture = game->getTextures()[0];
+}
+
+void BlocksMap::saveToFile(ofstream& outfile) {
+	ArkanoidObject::saveToFile(outfile);
+
+	for (int r = 0; r < rows; r++) {
+		for (int c = 0; c < cols; c++) {
+			if (cells[r][c] != nullptr) {
+				outfile << cells[r][c]->getColor() << " ";
+			} else {
+				outfile << 0 << " ";
+			}
+		}
+		outfile << endl;
+	}
+	outfile << endl;
+}
+
+bool BlocksMap::checkCollision(const SDL_Rect* rect, const Vector2D* vel, Vector2D& collVector, Game* game) {
+	if (SDL_HasIntersection(rect, &getRect())) {
+		Block* block = collides(rect, vel, collVector);
+		if (block != nullptr) {
+			srand(time(NULL));
+			if (rand() % 5 == 0) {
+				game->createReward(block->getX(), block->getY());
+			}
+			ballHitsBlock(block);
+			if (getNumBlocks() == 0) {
+				game->nextLevel();
+			}
+		}
+		return true;
 	}
 }
 
@@ -122,8 +178,8 @@ Block* BlocksMap::blockAt(const Vector2D& p) {
 	cout << r << "-" << c << " ";
 	if (cells[r][c] != nullptr) {
 		return cells[r][c];
-	}*/
-	
+	}
+	*/
 	// PENDIENTE DE MEJORA
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < cols; c++) {
@@ -152,6 +208,18 @@ void BlocksMap::ballHitsBlock(Block* block) {
 // Devuelve el número de bloques que quedan
 int BlocksMap::getNumBlocks() {
 	return numBlocks;
+}
+
+int BlocksMap::getRows() {
+	return rows;
+}
+
+int BlocksMap::getCols() {
+	return cols;
+}
+
+Block*** BlocksMap::getCells() {
+	return cells;
 }
 
 void BlocksMap::limpiar() {

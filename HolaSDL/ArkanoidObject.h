@@ -5,6 +5,7 @@
 #include "Vector2D.h"
 #include "Texture.h"
 
+class Game;
 class ArkanoidObject : public GameObject {
 protected:
 	Vector2D pos;
@@ -17,8 +18,8 @@ public:
 
 	~ArkanoidObject() { limpiar(); }
 	void limpiar();
-	void loadFromFile();
-	void saveToFile(string filename);
+	virtual void loadFromFile(ifstream& file, Game* game);
+	virtual void saveToFile(ofstream& outfile);
 	void render();
 	void renderFrame(int row, int col);
 

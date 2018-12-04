@@ -11,19 +11,20 @@ int main(int argc, char* argv[]){
 	//_CrtSetDbgFlag(CRTDBG ALLOC MEM DF | CRTDBG LEAK CHECK DF);
 	Menu menu = Menu();
 	menu.run();
-	//Game game = Game();
-	//game.run();
-	//delete game;
 	return 0;
 }
 
 // PREGUNTAS
+// Por que niveles.lenght() es 19?
 
 // TAREAS PENDIENTES
 /*
-- Llevarse más colisiones de Game.collides() a <Objeto>.collides()
-- Destruir blocksMap correctamente al cargar un nuevo nivel (método limpiar)
+- Arreglar parche de blocksMaps.loadFromFile()
+- Error al sobreescribir archivo de guardado
+- Guardar los rewards en el fichero
+- Mejorar menú
+- Implementar excepciones
 - Mejorar bucles anidados de blockAt()
-- Eliminar valores inmediatos
 - Revisar destructores
+- Retocar velocidad paddle
 */

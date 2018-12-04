@@ -9,19 +9,15 @@ class Menu {
 private:
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
+
 	SDL_Rect titleRect;
 	Texture* titleText;
-
-	// boton para jugar
 	SDL_Rect playButtonRect;
 	Texture* playButtonText;
-	//boton para cargar archivo
 	SDL_Rect loadButtonRect;
 	Texture* loadButtonText;
-	//boton para salir del juego
 	SDL_Rect endButtonRect;
 	Texture* endButtonText;
-
 	bool exit = false;
 public:
 	Menu();

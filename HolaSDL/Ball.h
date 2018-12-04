@@ -10,7 +10,7 @@ class Game;
 class Ball : public MovingObject{
 private:
 	Vector2D posIni;
-	Vector2D velIni;
+	Vector2D velIni = Vector2D(1,1);
 	Game* game;
 public:
 	Ball() {}
@@ -18,7 +18,6 @@ public:
 		MovingObject(x, y, w, h, v, t) {
 		game = g;
 		posIni = Vector2D(x, y);
-		velIni = v;
 	}
 	~Ball() { limpiar(); }
 	void limpiar();

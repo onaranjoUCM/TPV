@@ -1,22 +1,21 @@
 #include "MovingObject.h"
+#include "Game.h"
 #include "checkML.h"
 #include <fstream>
 
 using namespace std;
 
-void MovingObject::loadFromFile() {
-
+void MovingObject::loadFromFile(ifstream& file, Game* game) {
+	int vx, vy;
+	file >> vx >> vy;
+	vel = Vector2D(vx, vy);
+	ArkanoidObject::loadFromFile(file, game);
 }
 
-void MovingObject::saveToFile(string filename) {
-	ofstream outfile(filename);
+void MovingObject::saveToFile(ofstream& outfile) {
 	outfile << vel.getX() << " ";
 	outfile << vel.getY() << " ";
-	outfile << pos.getX() << " ";
-	outfile << pos.getY() << " ";
-	outfile << w << " ";
-	outfile << h << endl;
-	outfile.close();
+	ArkanoidObject::saveToFile(outfile);
 }
 
 Vector2D MovingObject::getVel() { return vel; }
