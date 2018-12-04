@@ -9,13 +9,13 @@ void Reward::limpiar() {
 }
 
 void Reward::update() {
-	if (getY() > WIN_HEIGHT) {
-		game->deleteReward(this);
-	}
 	pos = pos + vel;
 	if (SDL_HasIntersection(&getRect(), &paddle->getRect()) && !spent) {
 		spent = true;
 		doEffect();
+	}
+	if (getY() > WIN_HEIGHT) {
+		//game->deleteReward(this);
 	}
 }
 

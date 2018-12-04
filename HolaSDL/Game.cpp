@@ -158,9 +158,14 @@ void Game::run() {
 // Métodos que ocurren en cada frame
 void Game::update() {
 	if (win == false && gameOver == false) {
+		for (auto object : objects)
+		{
+			object->update();
+		}
+		/*
 		for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
 			(*it)->update();
-		}
+		}*/
 	}
 
 	if (vidas == 0 && !gameOver) {
@@ -213,7 +218,6 @@ void Game::ganaVida() {
 
 void Game::nextLevel() {
 	if (nivelActual < 2) {
-		//ball = new Ball(WIN_WIDTH / 2 - textures[ballText]->getW() / 10, WIN_HEIGHT - 100, textures[ballText]->getW() / 5, textures[ballText]->getH() / 5, ballSpeed, textures[ballText], this);
 		delete blocksMap;
 		ball->setPos(Vector2D(WIN_WIDTH / 2 - textures[ballText]->getW() / 10, WIN_HEIGHT - 100));
 		ball->setVel(ballSpeed);
@@ -284,7 +288,7 @@ void Game::killObject(list<ArkanoidObject*>::iterator it) {
 void Game::deleteReward(Reward* r) {
 	for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
 		if ((*it) == r) {
-			delete &r;
+			delete r;
 			objects.erase(it);
 			break;
 		}
