@@ -25,7 +25,7 @@ Menu::Menu() {
 	playButtonRect.w = 100;
 	playButtonRect.h = 50;
 	playButtonText = new Texture(renderer);
-	playButtonText->load("..\\images\\bricks.png", 2, 3);
+	playButtonText->load("..\\images\\buttons.png", 2, 3);
 
 	// load button
 	loadButtonRect.x = 350;
@@ -33,7 +33,7 @@ Menu::Menu() {
 	loadButtonRect.w = 100;
 	loadButtonRect.h = 50;
 	loadButtonText = new Texture(renderer);
-	loadButtonText->load("..\\images\\bricks.png", 2, 3);
+	loadButtonText->load("..\\images\\buttons.png", 2, 3);
 
 	// end button
 	endButtonRect.x = 350;
@@ -41,7 +41,7 @@ Menu::Menu() {
 	endButtonRect.w = 100;
 	endButtonRect.h = 50;
 	endButtonText = new Texture(renderer);
-	endButtonText->load("..\\images\\bricks.png", 2, 3);
+	endButtonText->load("..\\images\\buttons.png", 2, 3);
 }
 
 Menu::~Menu() {
