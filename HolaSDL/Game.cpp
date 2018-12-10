@@ -8,7 +8,10 @@
 #include "Reward.h"
 #include "checkML.h"
 #include <fstream>
-#include <time.h> 
+#include <time.h>
+#include "GameStateMachine.h"
+#include "PlayState.h"
+#include "MenuState.h"
 
 Game::Game() {
 	// INITIALIZE SDL
@@ -37,6 +40,11 @@ Game::Game() {
 	paddle = new Paddle(WIN_WIDTH / 2 - textures[paddleText]->getW() / 2, WIN_HEIGHT - (WIN_HEIGHT / 10), textures[paddleText]->getW(), textures[paddleText]->getH(), textures[paddleText]);
 	ball = new Ball(WIN_WIDTH / 2 - textures[ballText]->getW() / 10, WIN_HEIGHT - 100, textures[ballText]->getW() / 5, textures[ballText]->getH() / 5, ballSpeed, textures[ballText], this);
 	loadList();
+
+	// GAME STATES
+	currentGameState = menu;
+	gameStateMachine = new GameStateMachine();
+	gameStateMachine->changeState(new MenuState());
 }
 
 Game::Game(string filename) {
@@ -171,6 +179,10 @@ void Game::render() {
 		object->render();
 	}
 	SDL_RenderPresent(renderer);
+	//AGREGADO
+	//SDL_RenderClear(m_pRenderer);
+	//gameStateMachine->render();
+	//SDL_RenderPresent(m_pRenderer);
 }
 
 // Recoge y administra todos los eventos
@@ -188,6 +200,23 @@ void Game::handleEvents() {
 			}
 		}
 	}
+	// NUEVA IMPLEMENTACION PARA PRACTICA 3
+	switch (currentGameState)
+	{
+	case menu:
+		break;
+	case play:
+		paddle->update();
+		blocksMap->update();
+		ball->update();
+		break;
+	case end:
+		gameOver = true;
+		break;
+	case pause:
+		break;
+	}
+	gameStateMachine->update();
 }
 
 void Game::pierdeVida() {
