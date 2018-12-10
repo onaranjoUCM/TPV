@@ -46,7 +46,7 @@ private:
 	int vidas = 3;
 	int nivelActual = 0;
 	int rewardTypes[4] = {0, 1, 3, 4};
-	Vector2D ballSpeed = Vector2D(1, -1);
+	Vector2D ballSpeed = Vector2D(2, -2);
 	string niveles[3] = { "..\\maps\\level01.ark", "..\\maps\\level02.ark", "..\\maps\\level03.ark" };
 public:
 	Game();

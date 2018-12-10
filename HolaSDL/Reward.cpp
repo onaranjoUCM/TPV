@@ -15,7 +15,7 @@ void Reward::update() {
 		doEffect();
 	}
 	if (getY() > WIN_HEIGHT) {
-		//game->deleteReward(this);
+		game->deleteReward(this);
 	}
 }
 
@@ -48,6 +48,5 @@ void Reward::doEffect() {
 		game->ganaVida();
 		break;
 	}
-	game->killObject(indVector);
-	//game->deleteReward(this);
+	game->deleteReward(this);
 }

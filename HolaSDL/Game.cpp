@@ -68,19 +68,6 @@ Game::Game(string filename) {
 
 		file >> vidas;
 		file >> nivelActual;
-		/*
-		blocksMap = new BlocksMap();
-		paddle = new Paddle();
-		ball = new Ball();
-		sideWallLeft = new Wall();
-		sideWallRight = new Wall();
-		upperWall = new Wall();
-		loadList();
-
-		for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
-			(*it)->loadFromFile(file, this);
-		}
-		*/
 		
 		file >> x >> y >> w >> h;
 		blocksMap = new BlocksMap(w, h, textures[blocksText]);
@@ -158,14 +145,10 @@ void Game::run() {
 // Métodos que ocurren en cada frame
 void Game::update() {
 	if (win == false && gameOver == false) {
-		for (auto object : objects)
-		{
-			object->update();
+		
+		for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end();) {
+			((*it++))->update();
 		}
-		/*
-		for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
-			(*it)->update();
-		}*/
 	}
 
 	if (vidas == 0 && !gameOver) {
@@ -183,8 +166,9 @@ void Game::update() {
 // Muestra todos los objetos en pantalla
 void Game::render() {
 	SDL_RenderClear(renderer);
-	for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
-		(*it)->render();
+	for (auto object : objects)
+	{
+		object->render();
 	}
 	SDL_RenderPresent(renderer);
 }
@@ -256,15 +240,7 @@ void Game::saveGame() {
 	}
 	outfile.close();
 }
-/*
-void Game::loadNextLevel() {
-	for (list<ArkanoidObject*>::iterator it = objects.begin(); it != objects.end(); ++it) {
-		delete *it;
-		it = objects.erase(it);
-	}
-	firstReward = objects.end();
-}
-*/
+
 void Game::createReward(int x, int y) {
 	srand(time(NULL));
 	int random = rand() % 4;
@@ -277,12 +253,6 @@ void Game::createReward(int x, int y) {
 		firstReward = itFR;
 	}
 	*/
-}
-
-void Game::killObject(list<ArkanoidObject*>::iterator it) {
-	//if (it = firstReward) firstRewardH;
-	//delete *it;
-	//objects.erase(it);
 }
 
 void Game::deleteReward(Reward* r) {
