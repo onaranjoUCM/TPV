@@ -25,6 +25,7 @@ const TextureAtributes textureAtribs[NUM_TEXTURES] = {
 class GameStateMachine; // NUEVO
 class Game {
 private:
+	const enum textureName { blocksText, rewardText, sideWallText, upperWallText, paddleText, ballText };
 	enum gameStates { menu = 0, play = 1, end = 3, pause = 4 }; //NUEVO
 	Texture* textures[NUM_TEXTURES];
 	const string textureNames[NUM_TEXTURES] = { "..\\images\\bricks.png", "..\\images\\rewards.png", "..\\images\\side.png", "..\\images\\topside.png", "..\\images\\paddle.png", "..\\images\\ball.png" };
