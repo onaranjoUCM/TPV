@@ -25,10 +25,6 @@ const TextureAtributes textureAtribs[NUM_TEXTURES] = {
 class Game {
 private:
 	const enum textureName { blocksText, rewardText, sideWallText, upperWallText, paddleText, ballText };
-<<<<<<< HEAD
-	enum gameStates { menu = 0, play = 1, end = 3, pause = 4 }; //NUEVO
-=======
->>>>>>> parent of db7031d... agregados gameStateMachine, GameState, PlayState, MenuState y MenuButton al repositorio de TPV para el proyecto I de la materia de TPV del Sr. Prof. Miguel Gomez para la replicacion exacta e identica del juego de video del siglo XX de nombre conocido para el publico como Arkanoid
 	Texture* textures[NUM_TEXTURES];
 	const string textureNames[NUM_TEXTURES] = { "..\\images\\bricks.png", "..\\images\\rewards.png", "..\\images\\side.png", "..\\images\\topside.png", "..\\images\\paddle.png", "..\\images\\ball.png" };
 
